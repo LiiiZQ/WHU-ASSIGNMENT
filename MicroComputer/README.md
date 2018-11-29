@@ -1,5 +1,7 @@
 微机原理与应用 
 
+https://bob.cs.sonoma.edu/IntroCompOrg-x64/bookli5.html#x6-10000
+
 作业
 
 ### eight-queen
