@@ -1,0 +1,123 @@
+Turbo Assembler	 Version 4.1	    11/29/18 19:47:20	    Page 1
+prime.asm
+
+
+
+      1	0000			     DATA    SEGMENT
+      2	0000  64*(??)		     PRIME   DB	 100 DUP(?)  ; 储存1～100可能出现的质数
+      3	0064			     DATA    ENDS
+      4
+      5	0000			     CODE    SEGMENT
+      6					     ASSUME  CS:CODE,ES:DATA,DS:DATA
+      7
+      8	0000			     MAIN    PROC    FAR     ; 程序主体
+      9	0000  1E		     START:  PUSH    DS
+     10	0001  2B C0			     SUB     AX,AX
+     11	0003  50			     PUSH    AX
+     12
+     13	0004  B8 0000s			     MOV     AX,DATA
+     14	0007  8E D8			     MOV     DS,AX
+     15	0009  BE 0000r			     MOV     SI,OFFSET PRIME
+     16	000C  BF 0000r			     MOV     DI,OFFSET PRIME
+     17
+     18	000F  B5 01			     MOV     CH,1    ; 记录当前数字，2～100
+     19
+     20	0011  FE C5		     LOOP:   INC     CH
+*Warning* prime.asm(20)	Reserved word used as symbol: LOOP
+     21	0013  80 FD 64			     CMP     CH,100
+     22	0016  77 1E			     JA	     PRINT   ; 检查完毕，进行打印
+     23	0018  B1 01			     MOV     CL,1    ; 寻找CH的因数，2~(CH/2)
+     24
+     25	001A  FE C1		     FACTOR: INC     CL	     ; 寻找因数，判断当前CH是否为质数
+     26	001C  8A DD			     MOV     BL,CH
+     27	001E  D0 EB			     SHR     BL,1
+     28	0020  3A CB			     CMP     CL,BL
+     29	0022  77 0D			     JA	     STORE   ; 是质数=>储存结果
+     30
+     31	0024  33 C0			     XOR     AX,AX   ; AX = 0
+     32	0026  8A C5			     MOV     AL,CH   ; AX = AL = CH, AH	= 0
+     33	0028  F6 F1			     DIV     CL	     ; AH = CH % CL
+     34	002A  80 FC 00			     CMP     AH,0    ;
+     35	002D  74 E2			     JE	     LOOP    ; 不是质数=>检查下一个数字
+     36	002F  EB E9			     JMP     FACTOR
+     37
+     38	0031  88 2C		     STORE:  MOV     [SI],CH
+     39	0033  46			     INC     SI
+     40	0034  EB DB			     JMP     LOOP    ; 储存质数=>检查下一个数字
+     41
+     42	0036  3B FE		     PRINT:  CMP     DI,SI
+     43	0038  74 0A			     JE	     STOP    ; 打印完毕，结束
+     44
+     45	003A  2B C0			     SUB     AX,AX
+     46	003C  8A 05			     MOV     AL,[DI]
+     47	003E  E8 0004			     CALL    PRINTER
+     48
+     49	0041  47			     INC     DI
+     50	0042  EB F2			     JMP     PRINT   ; 打印下一个数字
+     51
+     52	0044  CB		     STOP:   RET
+     53	0045			     MAIN    ENDP
+     54
+     55	0045			     PRINTER PROC    NEAR	     ; 转化为ASCII码表示并打印
+     56	0045  B3 0A			     MOV     BL,10
+Turbo Assembler	 Version 4.1	    11/29/18 19:47:20	    Page 2
+prime.asm
+
+
+
+     57	0047  F6 F3			     DIV     BL		     ; AH = AX % 10, AL	= AX / 10
+     58	0049  86 E0			     XCHG    AH,AL	     ; AL = AX % 10, AH	= AX / 10
+     59	004B  0D 3030			     OR	     AX,3030H
+     60	004E  8B C8			     MOV     CX,AX
+     61
+     62	0050  8A D5			     MOV     DL,CH	     ; print
+     63	0052  B4 02			     MOV     AH,2
+     64	0054  CD 21			     INT     21H
+     65	0056  8A D1			     MOV     DL,CL	     ; print
+     66	0058  B4 02			     MOV     AH,2
+     67	005A  CD 21			     INT     21H
+     68	005C  B2 20			     MOV     DL,20H	     ; space
+     69	005E  B4 02			     MOV     AH,2
+     70	0060  CD 21			     INT     21H
+     71	0062  C3			     RET
+     72	0063			     PRINTER ENDP
+     73
+     74	0063			     CODE    ENDS
+     75					     END MAIN
+Turbo Assembler	 Version 4.1	    11/29/18 19:47:20	    Page 3
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "11/29/18"
+??FILENAME			  Text	 "prime	  "
+??TIME				  Text	 "19:47:20"
+??VERSION			  Number 040A
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 PRIME
+@WORDSIZE			  Text	 2
+FACTOR				  Near	 CODE:001A
+LOOP				  Near	 CODE:0011
+MAIN				  Far	 CODE:0000
+PRIME				  Byte	 DATA:0000
+PRINT				  Near	 CODE:0036
+PRINTER				  Near	 CODE:0045
+START				  Near	 CODE:0000
+STOP				  Near	 CODE:0044
+STORE				  Near	 CODE:0031
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  0063 Para	  none
+DATA				  16  0064 Para	  none
+Turbo Assembler	 Version 4.1	    11/29/18 19:47:20	    Page 4
+Error Summary
+
+
+
+*Warning* prime.asm(20)	Reserved word used as symbol: LOOP
+

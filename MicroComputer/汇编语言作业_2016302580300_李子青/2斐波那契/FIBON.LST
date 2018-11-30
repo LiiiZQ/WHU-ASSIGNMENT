@@ -1,0 +1,138 @@
+Turbo Assembler	 Version 4.1	    11/29/18 19:53:00	    Page 1
+fibon.asm
+
+
+
+      1	0000			     DATA    SEGMENT
+      2	0000  1E*(0000)		     FL	     DW	     30	 DUP(0)		     ; 用两个数组储存结果
+      3	003C  1E*(0000)		     FH	     DW	     30	 DUP(0)
+      4	0078  ????		     TMP     DW	     ?			     ; 临时数组
+      5	007A			     DATA    ENDS
+      6
+      7
+      8	0000			     CODE    SEGMENT
+      9					     ASSUME  CS:CODE,ES:DATA,DS:DATA
+     10	0000			     MAIN    PROC    FAR		     ; 程序主体
+     11	0000  1E		     START:  PUSH    DS
+     12	0001  2B C0			     SUB     AX,AX
+     13	0003  50			     PUSH    AX
+     14
+     15	0004  B8 0000s			     MOV     AX,DATA
+     16	0007  8E D8			     MOV     DS,AX
+     17	0009  BE 0000r			     MOV     SI,OFFSET FL
+     18	000C  BF 003Cr			     MOV     DI,OFFSET FH
+     19
+     20	000F  C7 04 0001		     MOV     WORD PTR [SI],1	     ; 第一个数：1
+     21	0013  C7 44 02 0001		     MOV     WORD PTR [SI+2],1	     ; 第二个数：1
+     22	0018  83 C6 04			     ADD     SI,4
+     23	001B  83 C7 04			     ADD     DI,4
+     24	001E  B9 001C			     MOV     CX,28		     ; 循环28次
+     25
+     26	0021  8B 44 FE		     AGAIN:  MOV     AX,[SI-2]
+     27	0024  8B 5C FC			     MOV     BX,[SI-4]
+     28	0027  03 C3			     ADD     AX,BX		     ; 计算下一个数(先加前半部分)
+     29	0029  89 04			     MOV     [SI],AX
+     30
+     31	002B  8B 45 FE			     MOV     AX,[DI-2]
+     32	002E  8B 5D FC			     MOV     BX,[DI-4]
+     33	0031  13 C3			     ADC     AX,BX		     ; (加后半部分)
+     34	0033  89 05			     MOV     [DI],AX
+     35
+     36	0035  83 C6 02			     ADD     SI,2
+     37	0038  83 C7 02			     ADD     DI,2
+     38	003B  E2 E4			     LOOP    AGAIN
+     39
+     40	003D  B9 001E			     MOV     CX,30
+     41	0040  BE 0000r			     MOV     SI,OFFSET FL
+     42	0043  BF 003Cr			     MOV     DI,OFFSET FH
+     43	0046  8B 15		     PRINT:  MOV     DX,[DI]
+     44	0048  8B 04			     MOV     AX,[SI]
+     45	004A  51			     PUSH    CX			     ; protect CX
+     46	004B  E8 000A			     CALL    PRINTER
+     47	004E  59			     POP     CX			     ; recover CX
+     48	004F  83 C6 02			     ADD     SI,2
+     49	0052  83 C7 02			     ADD     DI,2
+     50	0055  E2 EF			     LOOP    PRINT
+     51
+     52	0057  CB			     RET
+     53	0058			     MAIN    ENDP
+     54
+     55
+     56
+     57	0058			     PRINTER PROC    NEAR		     ;转化为ASCII码表示打印
+Turbo Assembler	 Version 4.1	    11/29/18 19:53:00	    Page 2
+fibon.asm
+
+
+
+     58	0058  B9 2710			     MOV     CX,10000
+     59	005B  F7 F1			     DIV     CX
+     60	005D  A3 0078r			     MOV     TMP,AX		     ; protect AX
+     61
+     62	0060  B9 0004			     MOV     CX,4		     ; loop 4 times
+     63	0063  8B C2			     MOV     AX,DX
+     64	0065  BA 0000		     LOOP1:  MOV     DX,0
+     65	0068  BB 000A			     MOV     BX,10
+     66	006B  F7 F3			     DIV     BX			     ; AX = AX / 10, DX	= AX % 10
+     67	006D  52			     PUSH    DX
+     68	006E  E2 F5			     LOOP    LOOP1
+     69
+     70	0070  B9 0002			     MOV     CX,2
+     71	0073  A1 0078r			     MOV     AX,TMP		     ; recover AX
+     72	0076  BA 0000		     LOOP2:  MOV     DX,0
+     73	0079  BB 000A			     MOV     BX,10
+     74	007C  F7 F3			     DIV     BX			     ; AX = AX / 10, DX	= AX % 10
+     75	007E  52			     PUSH    DX
+     76	007F  E2 F5			     LOOP    LOOP2
+     77
+     78
+     79	0081  B9 0006			     MOV     CX,6		     ; 第30个斐波那契数832040(6位)
+     80	0084  5A		     LOOP3:  POP     DX
+     81	0085  80 CA 30			     OR	     DL,30H		     ; print
+     82	0088  B4 02			     MOV     AH,2
+     83	008A  CD 21			     INT     21H
+     84	008C  E2 F6			     LOOP    LOOP3
+     85
+     86
+     87	008E  B2 20			     MOV     DL,20H		     ; space
+     88	0090  B4 02			     MOV     AH,2
+     89	0092  CD 21			     INT     21H
+     90
+     91	0094  C3			     RET
+     92	0095			     PRINTER ENDP
+     93
+     94	0095			     CODE    ENDS
+     95					     END MAIN
+Turbo Assembler	 Version 4.1	    11/29/18 19:53:00	    Page 3
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "11/29/18"
+??FILENAME			  Text	 "fibon	  "
+??TIME				  Text	 "19:53:00"
+??VERSION			  Number 040A
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 FIBON
+@WORDSIZE			  Text	 2
+AGAIN				  Near	 CODE:0021
+FH				  Word	 DATA:003C
+FL				  Word	 DATA:0000
+LOOP1				  Near	 CODE:0065
+LOOP2				  Near	 CODE:0076
+LOOP3				  Near	 CODE:0084
+MAIN				  Far	 CODE:0000
+PRINT				  Near	 CODE:0046
+PRINTER				  Near	 CODE:0058
+START				  Near	 CODE:0000
+TMP				  Word	 DATA:0078
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  0095 Para	  none
+DATA				  16  007A Para	  none
+

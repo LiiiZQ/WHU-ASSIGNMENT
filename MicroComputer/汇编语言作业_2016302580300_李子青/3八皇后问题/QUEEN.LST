@@ -1,0 +1,182 @@
+Turbo Assembler	 Version 4.1	    11/29/18 20:03:20	    Page 1
+queen.asm
+
+
+
+      1	0000			     DATA    SEGMENT
+      2	0000  09*(??)		     QUEEN   DB	 9  DUP(?)		     ; location	of queens, declare 1 more byte so that index+
+      3				     starts with 1
+      4	0009  00		     ANS     DB	 0			     ; number of solutions
+      5	000A  0000		     CUR     DW	 0			     ; index of	current	positioning queen
+      6	000C  00		     ISVALID DB	 0			     ; whether current queen is	valid
+      7	000D  0008		     QNO     DW	 8			     ; number of queens
+      8	000F			     DATA    ENDS
+      9
+     10	0000			     CODE    SEGMENT
+     11					     ASSUME  CS:CODE,ES:DATA,DS:DATA
+     12	0000			     MAIN    PROC    FAR
+     13	0000  1E		     START:  PUSH    DS
+     14	0001  2B C0			     SUB     AX,AX
+     15	0003  50			     PUSH    AX
+     16
+     17	0004  B8 0000s			     MOV     AX,DATA		     ; set up for data segment
+     18	0007  8E D8			     MOV     DS,AX
+     19
+     20	0009  E8 0070			     CALL    DFS
+     21
+     22	000C  B8 0000			     MOV     AX,0
+     23	000F  A0 0009r			     MOV     AL,ANS		     ; AX = ANS
+     24	0012  B3 0A			     MOV     BL,10
+     25	0014  F6 F3			     DIV     BL			     ; AH = AX % 10, AL	= AX / 10
+     26	0016  86 E0			     XCHG    AH,AL		     ; AL = AX % 10, AH	= AX / 10
+     27	0018  0D 3030			     OR	     AX,3030H		     ; transform to ASCII representation
+     28	001B  8B C8			     MOV     CX,AX
+     29
+     30	001D  B2 0D			     MOV     DL,0DH		     ; print \r
+     31	001F  B4 02			     MOV     AH,2
+     32	0021  CD 21			     INT     21H
+     33	0023  B2 0A			     MOV     DL,0AH		     ; print \n
+     34	0025  B4 02			     MOV     AH,2
+     35	0027  CD 21			     INT     21H
+     36	0029  8A D5			     MOV     DL,CH		     ; print first number
+     37	002B  B4 02			     MOV     AH,2
+     38	002D  CD 21			     INT     21H
+     39	002F  8A D1			     MOV     DL,CL		     ; print second number
+     40	0031  B4 02			     MOV     AH,2
+     41	0033  CD 21			     INT     21H
+     42	0035  B2 0D			     MOV     DL,0DH		     ; print \r
+     43	0037  B4 02			     MOV     AH,2
+     44	0039  CD 21			     INT     21H
+     45	003B  B2 0A			     MOV     DL,0AH		     ; print \n
+     46	003D  B4 02			     MOV     AH,2
+     47	003F  CD 21			     INT     21H
+     48
+     49	0041  CB			     RET
+     50	0042			     MAIN    ENDP
+     51
+     52	0042			     CHECK   PROC    NEAR
+     53	0042  8B 0E 000Ar		     MOV     CX,CUR
+     54	0046  49			     DEC     CX
+     55	0047  83 F9 00			     CMP     CX,0		     ; first queen is always valid
+     56	004A  74 24			     JE	     VALID
+     57	004C  8B F1		     LOOP1:  MOV     SI,CX
+Turbo Assembler	 Version 4.1	    11/29/18 20:03:20	    Page 2
+queen.asm
+
+
+
+     58	004E  8A 84 0000r		     MOV     AL,QUEEN[SI]
+     59	0052  8B 36 000Ar		     MOV     SI,CUR
+     60	0056  8A 9C 0000r		     MOV     BL,QUEEN[SI]
+     61	005A  2A C3			     SUB     AL,BL		     ; duplicate location is invalid
+     62	005C  74 18			     JE	     INVALID
+     63	005E  73 04			     JNC     CROSS		     ; AX is greater than BX, difference is positive, jump  +
+     64				     to	check cross lines
+     65	0060  F6 D0			     NOT     AL			     ; otherwise, difference is	negative
+     66	0062  FE C0			     INC     AL			     ; AX = -AX, now the difference is positive
+     67	0064  8B 1E 000Ar	     CROSS:  MOV     BX,CUR
+     68	0068  2B D9			     SUB     BX,CX		     ; BX is the difference of their index
+     69	006A  3A C3			     CMP     AL,BL
+     70	006C  74 08			     JE	     INVALID
+     71	006E  E2 DC			     LOOP    LOOP1
+     72	0070  C6 06 000Cr 01	     VALID:  MOV     ISVALID,1
+     73	0075  C3			     RET
+     74	0076  C6 06 000Cr 00	     INVALID:MOV     ISVALID,0
+     75	007B  C3			     RET
+     76	007C			     CHECK   ENDP
+     77
+     78
+     79	007C			     DFS     PROC    NEAR
+     80	007C  FF 06 000Ar		     INC     CUR
+     81	0080  8B 0E 000Dr		     MOV     CX,QNO
+     82	0084  39 0E 000Ar		     CMP     CUR,CX		     ; if all queens have been placed, solution	found
+     83	0088  77 21			     JA	     FOUND
+     84
+     85	008A  8B 36 000Ar	     LOOP3:  MOV     SI,CUR
+     86	008E  88 8C 0000r		     MOV     QUEEN[SI],CL
+     87	0092  51			     PUSH    CX			     ; protect CX
+     88	0093  E8 FFAC			     CALL    CHECK
+     89	0096  59			     POP     CX			     ; revover CX
+     90	0097  80 3E 000Cr 01		     CMP     ISVALID,1		     ; if current queen	is valid, then go deeper
+     91	009C  74 03			     JE	     DEEPER
+     92	009E  EB 06 90			     JMP     CONT		     ; otherwise, place	current	queen to another position
+     93	00A1  51		     DEEPER: PUSH    CX			     ; protect CX
+     94	00A2  E8 FFD7			     CALL    DFS
+     95	00A5  59			     POP     CX			     ; revover CX
+     96	00A6  E2 E2		     CONT:   LOOP    LOOP3
+     97	00A8  EB 08 90			     JMP     STOP
+     98
+     99	00AB  FE 06 0009r	     FOUND:  INC     ANS
+    100	00AF  E8 0005			     CALL    PRINTER
+    101	00B2  FF 0E 000Ar	     STOP:   DEC     CUR
+    102	00B6  C3			     RET
+    103	00B7			     DFS     ENDP
+    104
+    105
+    106	00B7			     PRINTER PROC    NEAR
+    107	00B7  B9 0001			     MOV     CX,1
+    108	00BA  8B F1		     LOOP2:  MOV     SI,CX
+    109	00BC  8A 94 0000r		     MOV     DL,QUEEN[SI]
+    110	00C0  80 CA 30			     OR	     DL,30H		     ; transform to ASCII
+    111	00C3  B4 02			     MOV     AH,2
+    112	00C5  CD 21			     INT     21H
+    113	00C7  41			     INC     CX
+    114	00C8  3B 0E 000Dr		     CMP     CX,QNO		     ; if CX <=	QNO, keep printing
+Turbo Assembler	 Version 4.1	    11/29/18 20:03:20	    Page 3
+queen.asm
+
+
+
+    115	00CC  76 EC			     JBE     LOOP2
+    116
+    117	00CE  B2 2C			     MOV     DL,2CH		     ;print ','
+    118	00D0  B4 02			     MOV     AH,2
+    119	00D2  CD 21			     INT     21H
+    120
+    121	00D4  C3			     RET
+    122	00D5			     PRINTER ENDP
+    123
+    124	00D5			     CODE    ENDS
+    125					     END MAIN
+Turbo Assembler	 Version 4.1	    11/29/18 20:03:20	    Page 4
+Symbol Table
+
+
+
+
+Symbol Name			  Type	 Value
+
+??DATE				  Text	 "11/29/18"
+??FILENAME			  Text	 "queen	  "
+??TIME				  Text	 "20:03:20"
+??VERSION			  Number 040A
+@CPU				  Text	 0101H
+@CURSEG				  Text	 CODE
+@FILENAME			  Text	 QUEEN
+@WORDSIZE			  Text	 2
+ANS				  Byte	 DATA:0009
+CHECK				  Near	 CODE:0042
+CONT				  Near	 CODE:00A6
+CROSS				  Near	 CODE:0064
+CUR				  Word	 DATA:000A
+DEEPER				  Near	 CODE:00A1
+DFS				  Near	 CODE:007C
+FOUND				  Near	 CODE:00AB
+INVALID				  Near	 CODE:0076
+ISVALID				  Byte	 DATA:000C
+LOOP1				  Near	 CODE:004C
+LOOP2				  Near	 CODE:00BA
+LOOP3				  Near	 CODE:008A
+MAIN				  Far	 CODE:0000
+PRINTER				  Near	 CODE:00B7
+QNO				  Word	 DATA:000D
+QUEEN				  Byte	 DATA:0000
+START				  Near	 CODE:0000
+STOP				  Near	 CODE:00B2
+VALID				  Near	 CODE:0070
+
+Groups & Segments		  Bit Size Align  Combine Class
+
+CODE				  16  00D5 Para	  none
+DATA				  16  000F Para	  none
+
