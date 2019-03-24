@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!ENTITY % p "(#PCDATA)">
+<!ENTITY % c "CDATA">
+
+<!ELEMENT info (Spy+)>
+<!ELEMENT Spy (firstName,lastName,(Mission)*,(Alias)*)>
+<!ELEMENT Mission (date,description,status)>
+<!ELEMENT Alias (alias)>
+
+<!ATTLIST Spy spyID %c; #REQUIRED>
+<!ATTLIST Mission mID %c; #REQUIRED>
+<!ATTLIST Alias aID %c; #REQUIRED>
+
+<!ELEMENT firstName %p;>
+<!ELEMENT lastName %p;>
+<!ELEMENT date %p;>
+<!ELEMENT description %p;>
+<!ELEMENT status %p;>
+<!ELEMENT alias %p;>

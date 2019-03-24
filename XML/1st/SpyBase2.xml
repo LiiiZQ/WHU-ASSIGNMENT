@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE info SYSTEM "spyBase2.dtd">
+<info>
+	<Spy spyID="A001">
+		<firstName>Nikki</firstName>
+		<lastName>Devgood</lastName>
+		<Mission mID="M101">
+			<date>2005/4/15</date>
+			<description>Crack the code</description>
+			<status>Mission Accomplished</status>
+		</Mission>
+		<Mission mID="M102">
+			<date>2006/2/15</date>
+			<description>Get the source</description>
+			<status>Mission Accomplished</status>
+		</Mission>
+		<Mission mID="M103">
+			<date>2006/5/4</date>
+			<description>Hit the target</description>
+			<status>In Progress</status>
+		</Mission>
+		<Alias aID="1">
+			<alias>Spy Grrrl</alias>
+		</Alias>
+		<Alias aID="2">
+			<alias>La Femme Nikki</alias>
+		</Alias>
+	</Spy>
+	<Spy spyID="A006">
+		<firstName>Link</firstName>
+		<lastName>Lister</lastName>
+		<Mission mID="M104">
+			<date>2006/6/15</date>
+			<description>Shoot the rapid</description>
+			<status>In Progress</status>
+		</Mission>
+		<Alias aID="3">
+			<alias>LL</alias>
+		</Alias>
+		<Alias aID="4">
+			<alias>Fred</alias>
+		</Alias>
+	</Spy>
+	<Spy spyID="A003">
+		<firstName>Danger</firstName>
+		<lastName>Mause</lastName>
+		<Mission mID="M105">
+			<date>2005/11/4</date>
+			<description>Get the &lt;big cheese&gt;</description>
+			<status>In Progress</status>
+		</Mission>
+		<Mission mID="M106">
+			<date>2006/4/4</date>
+			<description>Map the area</description>
+			<status>In Progress</status>
+		</Mission>
+		<Alias aID="5">
+			<alias>Big Ears</alias>
+		</Alias>
+	</Spy>
+	<Spy spyID="A099">
+		<firstName>Barbara</firstName>
+		<lastName>Feldon</lastName>
+		<Mission mID="M108">
+			<date>1967/2/15</date>
+			<description>Protect Chief</description>
+			<status>In Progress</status>
+		</Mission>
+		<Mission mID="M109">
+			<date>2006/6/15</date>
+			<description>Get some style</description>
+			<status>Mission Accomplished</status>
+		</Mission>
+		<Alias aID="6">
+			<alias>Inspector Gadget</alias>
+		</Alias>
+		<Alias aID="7">
+			<alias>Don Adams</alias>
+		</Alias>
+	</Spy>
+	<Spy spyID="A004">
+		<firstName>Maxwell</firstName>
+		<lastName>Smart</lastName>
+		<Mission mID="M107">
+			<date>2006/5/2</date>
+			<description>Get Smart</description>
+			<status>In Progress</status>
+		</Mission>
+	</Spy>
+</info>
