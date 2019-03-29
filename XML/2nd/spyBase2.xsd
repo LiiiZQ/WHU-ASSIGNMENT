@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 被2013 sp1 () 使用XMLSpy v编辑的 (http://www.altova.com) by -->
+<!-- edited with XMLSpy v2018 sp1 (http://www.altova.com) by Hu Haiyan (WHU university) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<xs:element name="info">
+		<xs:annotation>
+			<xs:documentation> root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="Spy" maxOccurs="5">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="firstName" type="xs:string"/>
+							<xs:element name="lastName" type="xs:string"/>
+							<xs:element name="Mission" type="missionType" minOccurs="0" maxOccurs="unbounded"/>
+							<xs:element name="Alias" type="aliasType" minOccurs="0" maxOccurs="unbounded"/>
+						</xs:sequence>
+						<xs:attribute name="spyID" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="missionType">
+		<xs:sequence>
+			<xs:element name="date" type="xs:string"/>
+			<xs:element name="description" type="xs:string"/>
+			<xs:element name="status" type="xs:string"/>
+		</xs:sequence>
+		<xs:attribute name="mID" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="aliasType">
+		<xs:sequence>
+			<xs:element name="alias" type="xs:string"/>
+		</xs:sequence>
+		<xs:attribute name="aID" type="xs:string" use="required"/>
+	</xs:complexType>
+</xs:schema>

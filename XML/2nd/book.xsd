@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 被2013 sp1 () 使用XMLSpy v编辑的 (http://www.altova.com) by -->
+<!-- edited with XMLSpy v2018 sp1 (http://www.altova.com) by Hu Haiyan (WHU university) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<xs:element name="book">
+		<xs:annotation>
+			<xs:documentation>root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="title" type="titleType"/>
+				<xs:element name="author" type="xs:string" maxOccurs="3"/>
+				<xs:element name="section" type="sectionType" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="titleType">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1"/>
+			<xs:maxLength value="100"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="bookTitleType">
+		<xs:restriction base="titleType">
+			<xs:enumeration value="Data On the Web"/>
+			<xs:enumeration value="TCP/IP Illustrated"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="sectionTitleType">
+		<xs:restriction base="titleType">
+			<xs:pattern value="\d(-\d)*\..+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:simpleType name="figureTitleType">
+		<xs:restriction base="titleType">
+			<xs:pattern value="\d(-\d)+\..+"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="sectionType" mixed="true">
+		<xs:sequence>
+			<xs:element name="title" type="titleType"/>
+			<xs:choice minOccurs="0">
+				<xs:element name="p" type="xs:string"/>
+				<xs:element name="figure">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="title" type="titleType"/>
+							<xs:element name="image">
+								<xs:complexType>
+									<xs:attribute name="source" type="pathType" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+						<xs:attribute name="width" type="xs:float" use="required"/>
+						<xs:attribute name="height" type="xs:float" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="section" type="sectionType"/>
+			</xs:choice>
+		</xs:sequence>
+		<xs:attribute name="id" type="xs:integer"/>
+		<xs:attribute name="difficulty">
+			<xs:simpleType>
+				<xs:restriction base="xs:string">
+					<xs:enumeration value="easy"/>
+					<xs:enumeration value="medium"/>
+					<xs:enumeration value="hard"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+	</xs:complexType>
+	<xs:simpleType name="pathType">
+		<xs:restriction base="xs:string">
+			<xs:pattern value="\\?(.+\\.+(\\.+)*\\?)"/>
+		</xs:restriction>
+	</xs:simpleType>
+</xs:schema>

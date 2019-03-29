@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 被2013 sp1 () 使用XMLSpy v编辑的 (http://www.altova.com) by -->
+<!-- edited with XMLSpy v2018 sp1 (http://www.altova.com) by Hu Haiyan (WHU university) -->
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" elementFormDefault="qualified" attributeFormDefault="unqualified" vc:minVersion="1.1">
+	<xs:element name="info">
+		<xs:annotation>
+			<xs:documentation> root element</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="aliasTable">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="aliasRow" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="spyREF" type="xs:string"/>
+										<xs:element name="alias" type="xs:string"/>
+									</xs:sequence>
+									<xs:attribute name="aID" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="missionTable">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="missionRow" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="spyREF" type="xs:string"/>
+										<xs:element name="date" type="xs:string"/>
+										<xs:element name="description" type="xs:string"/>
+										<xs:element name="status">
+											<xs:simpleType>
+												<xs:restriction base="xs:string">
+													<xs:enumeration value="Mission Accomplished"/>
+													<xs:enumeration value="In Progress"/>
+												</xs:restriction>
+											</xs:simpleType>
+										</xs:element>
+									</xs:sequence>
+									<xs:attribute name="mID" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="spyTable">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element name="spyRow" maxOccurs="unbounded">
+								<xs:complexType>
+									<xs:sequence>
+										<xs:element name="firstName" type="xs:string"/>
+										<xs:element name="lastName" type="xs:string"/>
+									</xs:sequence>
+									<xs:attribute name="spyID" type="xs:string" use="required"/>
+								</xs:complexType>
+							</xs:element>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+		<xs:key name="aID">
+			<xs:selector xpath="aliasTable/aliasRow"/>
+			<xs:field xpath="@aID"/>
+		</xs:key>
+		<xs:key name="mID">
+			<xs:selector xpath="missionTable/missionRow"/>
+			<xs:field xpath="@mID"/>
+		</xs:key>
+		<xs:key name="spyID">
+			<xs:selector xpath="spyTable/spyRow"/>
+			<xs:field xpath="@spyID"/>
+		</xs:key>
+		<xs:keyref name="spyREF" refer="spyID">
+			<xs:selector xpath="*/*/spyREF"/>
+			<xs:field xpath="."/>
+		</xs:keyref>
+	</xs:element>
+</xs:schema>
